@@ -43,6 +43,7 @@ void App::initialize() {
     // Initialize statistics
     delayStats.setName("TotalDelay");
     delayVector.setName("Delay");
+
 }
 
 void App::finish() {
@@ -56,7 +57,7 @@ void App::handleMessage(cMessage *msg) {
     // if msg is a sendMsgEvent, create and send new packet
     if (msg == sendMsgEvent) {
         // create new packet
-        Packet *pkt = new Packet("packet",this->getParentModule()->getIndex());
+        Packet *pkt = new Packet("packet", this->getParentModule()->getIndex());
         pkt->setByteLength(par("packetByteSize"));
         pkt->setSource(this->getParentModule()->getIndex());
         pkt->setDestination(par("destination"));
