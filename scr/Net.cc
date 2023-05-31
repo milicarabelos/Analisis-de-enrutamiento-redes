@@ -9,29 +9,44 @@ using namespace omnetpp;
 
 class TransportPacket : public cPacket
 {
-    struct idLists
-    {
-        int id;
-        idLists *next;
-    } idList *list;
+    int destination;
 
 public:
+    struct idList
+       {
+           int id;
+           idList *next;
+       };
+    idList *list;
     TransportPacket(const char *name = "TransportPacket", short kind = 2) : cPacket(name, kind) {
         list = NULL;
     }
-
+    void setDestination(int id){
+        destination = id;
+    }
+    int getDestination(){
+        return destination;
+    }
     void addIdList(int id)
     {
         // add id list to the end of the current list
         idList *aux = this->list;
-        while (aux != NULL)
+        if (aux == NULL)
         {
-            aux = aux->next;
+            this->list = new idList;
+            this->list->id = id;
+            this->list->next = NULL;
         }
-        idList *newId = new idList;
-        newId->id = id;
-        newId->next = NULL;
-        aux->next = newId;
+        else
+        {
+            while (aux->next != NULL)
+            {
+                aux = aux->next;
+            }
+            aux->next = new idList;
+            aux->next->id = id;
+            aux->next->next = NULL;
+        }
     }
 
     idList *getIdList()
@@ -47,11 +62,7 @@ private:
     cOutVector hopsVector;
     //  cStdDev hopsStats;
     cOutVector LnkSelectVector;
-    struct idLists
-    {
-        int id;
-        idLists *next;
-    } idList *listIndex;
+    TransportPacket::idList *listIndex;
 
 public:
     Net();
@@ -79,7 +90,6 @@ void Net::initialize()
 {
     hopsVector.setName("Hops");
     LnkSelectVector.setName("Lnk_Selected");
-    listIndex = NULL;
     TransportPacket *pkt = new TransportPacket();
     pkt->setDestination(this->getParentModule()->getIndex());
     pkt->addIdList(this->getParentModule()->getIndex());
@@ -99,7 +109,7 @@ void Net::handleMessage(cMessage *msg)
     {
         TransportPacket *pkt = (TransportPacket *)msg;
         
-        this->bubble("recibi tipo 2, id %i", pkt->getIdList()->id);
+        this->bubble("recibi tipo 2");
         if (pkt->getDestination() == this->getParentModule()->getIndex())
         {
             listIndex = pkt->getIdList();
