@@ -19,7 +19,7 @@ public:
            idList *next;
        };
     idList *list;
-    TransportPacket(const char *name = "TransportPacket", short kind = 4) : cPacket(name, kind) {
+    TransportPacket(const char *name = "TransportPacket", short kind = -1) : cPacket(name, kind) {
         list = NULL;
     }
     void setDestination(int id){
@@ -36,9 +36,8 @@ public:
         {
             this->list = new idList;
             this->list->id = id;
-            this->list->hops = 1;
+            this->list->hops = 0;
             this->list->next = NULL;
-
             this->length = 1;
         }
         else
@@ -51,7 +50,6 @@ public:
             aux->next->id = id;
             aux->next->hops = aux->hops + 1;
             aux->next->next = NULL;
-
             this->length += 1;
         }
     }
@@ -100,6 +98,7 @@ void Net::initialize()
 {
     hopsVector.setName("Hops");
     LnkSelectVector.setName("Lnk_Selected");
+
     TransportPacket *pkt = new TransportPacket();
     pkt->setDestination(this->getParentModule()->getIndex());
     pkt->addIdList(this->getParentModule()->getIndex());
@@ -118,7 +117,7 @@ void Net::finish()
 void Net::handleMessage(cMessage *msg)
 {
 
-    if (msg->getKind() == 4)
+    if (msg->getKind() == -1)
     {
         TransportPacket *pkt = (TransportPacket *)msg;
 
@@ -127,12 +126,11 @@ void Net::handleMessage(cMessage *msg)
         {
             this->netLength = pkt->getLength();
             this->nodeIndexArray = new int[this->netLength];
-            char str[100];
+
             TransportPacket::idList *aux = pkt->getIdList();
-            while (aux->next != NULL)
+            while (aux != NULL)
             {
                 this->nodeIndexArray[aux->hops] = aux->id;
-                this->bubble(str);
                 aux = aux->next;
             }
         }
@@ -173,6 +171,7 @@ void Net::handleMessage(cMessage *msg)
                   if (i > netLength - i){
                       gate = 1;
                   }
+                  break;
                 }
             }
             LnkSelectVector.record(gate);
