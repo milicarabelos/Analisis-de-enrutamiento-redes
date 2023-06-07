@@ -154,7 +154,34 @@ Análisis de la implementación inicial:
 
 
 ## Métodos: 
-​	describimos la contribucion realizada, los algortmos propuestos en la tarea de diseño
+
+### Definición de la clase TransportPacket: 
+Esta clase hereda de cPacket, que es una clase base para paquetes en OMNeT++. Tiene dos variables miembro: destination para almacenar el identificador del destino del paquete y length para almacenar la longitud del paquete. Además, tiene una estructura interna idList que se utiliza para almacenar una lista de identificadores y la cantidad de saltos que ha dado cada identificador en el camino del paquete. La lista está implementada como una lista enlazada simple.
+La clase TransportPacket proporciona métodos para establecer y obtener el destino del paquete, agregar elementos a la lista de identificadores y obtener la longitud del paquete.
+
+### Definición de la clase Net:
+Esta clase hereda de cSimpleModule, que es una clase base para los módulos en OMNeT++.
+La clase Net representa un nodo en la red de comunicación y yiene variables miembro para almacenar vectores de estadísticas y un puntero a un arreglo de enteros. 
+
+La clase Net implementa los métodos initialize(), finish() y handleMessage(cMessage *msg).
+
+#### initialize():
+Se inicializa el vector de estadísticas y se crea un nuevo paquete TransportPacket. El destino del paquete se establece en el índice del módulo padre (el nodo actual) y se agrega el índice del módulo padre a la lista de identificadores del paquete. A continuación, se envía el paquete al módulo "toLnk" con una puerta de salida de índice 0 y destino a nosotros mismos. Esto lo hacemos para poder "reconocer" a todos los nodos dentro de la red.
+
+
+#### finish():
+Se llama al finalizar la simulación. Aquí se libera la memoria asignada para el arreglo de índices de nodos.
+
+#### handleMessage(cMessage *msg): 
+Se encarga de manejar los mensajes recibidos por el módulo. Si el tipo de mensaje es -1, se interpreta como un paquete de transporte. Si el destino del paquete es el índice del módulo actual, se guarda la longitud del paquete y se copia la lista de identificadores en el arreglo nodeIndexArray.
+
+Si el destino no es el módulo actual, se agrega el índice del módulo actual a la lista de identificadores del paquete y se reenvía al módulo "toLnk" con una puerta de salida de índice 0. (reconocimiento de red).
+
+Si el tipo de mensaje no es -1, se interpreta como un paquete genérico. Si el destino del paquete es el índice del módulo actual, se registra la cantidad de saltos que ha dado el paquete en el vector de estadísticas y se reenvía al módulo "toApp" para su procesamiento final. Si el destino no es el módulo actual, se incrementa el contador de saltos del paquete y se decide a qué puerta de salida enviar el paquete en función de la posición del destino en el arreglo nodeIndexArray. La elección de la puerta de salida depende de si el destino está más cerca en sentido horario o antihorario en el anillo de nodos. Se registra la elección de la puerta de salida en el vector de estadísticas y se envía el paquete al módulo "toLnk" con la puerta de salida correspondiente.
+
+### Logica de envío de paquetes genericos
+La lógica de los envíos en esta simulación se basa en la idea de un anillo de nodos, donde cada nodo tiene una posición específica en el anillo. Los paquetes se envían de un nodo a otro en función de la posición de los nodos en el anillo. Cuando un paquete llega a un nodo, se verifica si el destino final del paquete es el nodo actual. Si es así, el paquete se envía al módulo "toApp" para su procesamiento final. Si el destino no es el nodo actual, se decide a qué nodo vecino enviar el paquete en función de la posición del destino en el anillo. La elección del nodo vecino se hace considerando si el destino está más cerca en sentido horario o antihorario en el anillo de nodos. El paquete se envía al nodo vecino correspondiente a través del módulo "toLnk".
+
 
 ---
 
@@ -259,12 +286,15 @@ En conclusión, el cambio realizado en el código ha logrado reducir la cantidad
 En resumen, el algoritmo mejora el enrutamiento al tomar decisiones adecuadas en cada nodo, permitiendo que los paquetes se envíen con la menor cantidad de saltos posibles en redes de tipo anillo. Sin embargo, su aplicabilidad se limita a este tipo específico de topología.
 
 ---
-
 ## Discusión:
- Sección de logros, limitaciones y posibles mejoras de los algoritmos propuestos
----
+### Limitaciones
+Nuestro algoritmo no funcionaría bien para networks con una topologia que no sea ciclica. 
+Debido a que el renocimiento de la red se basa en esta caracteristica de la red.
+Modificando, principalmente el reconocimiento de la red posiblemente pueda funcionar en grafos con diferente topologia.
 
-
+### Posibles mejoras en la implementación
+Se podría agregar un paquete nuevo que informe de congestion en alguna de las compuertas de un nodo. 
+Es decir si la "gate" 1 está saturada, enviar un paquete con destino a mi mismo en sentido horario o antihorario el cual informe a toda la red que la "gate" 1 está congestionada y que solo se puede acceder por la "gate" 0 (podriamos agregar una nueva "gate" en cada nodo para manejar solo estos paquetes) 
 
 ---
 
