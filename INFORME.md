@@ -33,8 +33,10 @@ Integrantes :
 
 ## Resumen Abstracto:
 
-Aca hay que poner dos/uno parrafitos resumiendo la totalidad del proyecto y sus resultados 
-​
+
+En este proyecto trabajaremos partiendo de un kickstarter que nos proporciona una implementación de red de anillo sobre la que trabajaremos. La implementación actual solo envía paquetes en una dirección sin considerar qué lado es más conveniente. Buscaremos modificar esta implementación para que cada nodo tenga conocimiento completo de la red y pueda tomar decisiones informadas sobre la ruta más adecuada.
+
+Además analizamos los valores en dos casos diferentes: antes y después de la mejora. En la mayoría de los casos, hemos logrado mejoras, a excepción de uno en el que se produce una ligera disminución del rendimiento. Esto se debe a que el cálculo necesario para determinar la ruta de envío introduce un mayor tiempo entre el envío y la recepción de cada mensaje, aunque no de manera significativa.
 
 ---
 
@@ -179,7 +181,7 @@ Si el destino no es el módulo actual, se agrega el índice del módulo actual a
 
 Si el tipo de mensaje no es -1, se interpreta como un paquete genérico. Si el destino del paquete es el índice del módulo actual, se registra la cantidad de saltos que ha dado el paquete en el vector de estadísticas y se reenvía al módulo "toApp" para su procesamiento final. Si el destino no es el módulo actual, se incrementa el contador de saltos del paquete y se decide a qué puerta de salida enviar el paquete en función de la posición del destino en el arreglo nodeIndexArray. La elección de la puerta de salida depende de si el destino está más cerca en sentido horario o antihorario en el anillo de nodos. Se registra la elección de la puerta de salida en el vector de estadísticas y se envía el paquete al módulo "toLnk" con la puerta de salida correspondiente.
 
-### Logica de envío de paquetes genericos
+### Lógica de envío de paquetes genéricos
 La lógica de los envíos en esta simulación se basa en la idea de un anillo de nodos, donde cada nodo tiene una posición específica en el anillo. Los paquetes se envían de un nodo a otro en función de la posición de los nodos en el anillo. Cuando un paquete llega a un nodo, se verifica si el destino final del paquete es el nodo actual. Si es así, el paquete se envía al módulo "toApp" para su procesamiento final. Si el destino no es el nodo actual, se decide a qué nodo vecino enviar el paquete en función de la posición del destino en el anillo. La elección del nodo vecino se hace considerando si el destino está más cerca en sentido horario o antihorario en el anillo de nodos. El paquete se envía al nodo vecino correspondiente a través del módulo "toLnk".
 
 
@@ -187,7 +189,7 @@ La lógica de los envíos en esta simulación se basa en la idea de un anillo de
 
 ## Resultados:
 
-​	Comparemos ahora los resultados analizados anteriormente en la seccion  [Análisis de la implementación inicial](#Análisis-de-la-implementación-inicial:) con los obtenidos luego de implementar el algoritmo detallado en **ACA LINK A LA PARTE DE JUAN DEL INFORMEEEEE** en cada uno de los casos.
+​	Comparemos ahora los resultados analizados anteriormente en la sección  [Análisis de la implementación inicial](#Análisis-de-la-implementación-inicial:) con los obtenidos luego de implementar el algoritmo detallado en [Métodos](#Métodos:) en cada uno de los casos.
 
 ### Caso 1
 
@@ -302,8 +304,6 @@ Es decir si la "gate" 1 está saturada, enviar un paquete con destino a mi mismo
 
 ## Bibliografía o Referencias
 
-- Andrew S. Tanenbaum 5ta Edición. *Computer Networks* . Ed. Pearson              <------ ESTO ES UN EJEMPLO
-
 - [www.javatpoint.com What is a ring topology?](https://www.javatpoint.com/what-is-a-ring-topology) 06/06/2023 
 
--  [www.computerhope.com Ring topology]( https://www.computerhope.com/jargon/r/ringtopo.htm#advantages) 06/06/2023
+- [www.computerhope.com Ring topology]( https://www.computerhope.com/jargon/r/ringtopo.htm#advantages) 06/06/2023
