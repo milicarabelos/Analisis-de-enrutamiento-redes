@@ -249,10 +249,14 @@ Análisis de la implementación inicial:
 ​	
 **Caso 2:** 
 
-​	Vemos una mejora, ya que reducimos la cantidad de saltos promedio de 2.06 en el modelo inicial a 1.84, y el retraso aumenta ligeramente de 63.53 a 63.66. Esto se debe a que, al enviar los paquetes por los caminos más cortos, logramos disminuir la cantidad de saltos. Sin embargo, podría decirse que nuestro algoritmo empeora un poco el funcionamiento de la red, ya que aumenta ligeramente el retardo de los paquetes. En este caso, dependerá del uso que le queramos dar a la red. Si consideramos la velocidad de llegada del paquete como prioridad sobre la cantidad de saltos que realiza cada paquete, nos convendría el algoritmo inicial. Mientras que si priorizamos la cantidad de saltos por sobre el tiempo de entrega, la mejora del algoritmo es más eficiente. Una vez más, esto depende del contexto en el cual se utiliza la red.
+​	Vemos una mejora, ya que reducimos la cantidad de saltos promedio de 2.06 en el modelo inicial a 1.84, y el retraso aumenta ligeramente de 63.53 a 63.66. Esto se debe a que, al enviar los paquetes por los caminos más cortos, logramos disminuir la cantidad de saltos. Sin embargo, podría decirse que nuestro algoritmo empeora un poco el funcionamiento de la red, ya que aumenta ligeramente el retardo de los paquetes. En este caso, dependerá del uso que le queramos dar a la red. Si consideramos la velocidad de llegada del paquete como prioridad sobre la cantidad de saltos que realiza cada paquete, nos convendría el algoritmo inicial. Mientras que si priorizamos la cantidad de saltos por sobre el tiempo de entrega, la 
+mejora del algoritmo es más eficiente. Una vez más, esto depende del contexto en el cual se utiliza la red.
 
+En conclusión, la modificación realizada en el código ha logrado reducir la cantidad de saltos en ambos casos, sin aumentar significativamente el tiempo de retraso de los paquetes. Sin embargo, el algoritmo implementado solo se adapta al modelo de red en forma de anillo, donde los nodos no necesariamente tienen que tener un orden consecutivo. Esto significa que el algoritmo puede funcionar en anillos de cualquier tamaño y con nodos que no estén ordenados secuencialmente. Por lo tanto, podemos afirmar que nuestro algoritmo es útil para enviar paquetes utilizando la menor cantidad de saltos posibles en cualquier red con topología de anillo.
 
-# FALTA UNA PEQUEÑA CONCLUSION ACAAAAA
+En conclusión, el cambio realizado en el código ha logrado reducir la cantidad de saltos en ambos casos sin aumentar drásticamente el tiempo de retardo de los paquetes. Sin embargo, es importante destacar que el algoritmo implementado se adapta específicamente al modelo de anillo, donde los nodos no necesariamente están ordenados de forma contigua ni las conexiones entre ellos siguen un patrón secuencial. Esto significa que el algoritmo es útil para el envío eficiente de paquetes en redes con topología de anillo, independientemente del tamaño del anillo y del orden de los nodos.
+
+En resumen, el algoritmo mejora el enrutamiento al tomar decisiones adecuadas en cada nodo, permitiendo que los paquetes se envíen con la menor cantidad de saltos posibles en redes de tipo anillo. Sin embargo, su aplicabilidad se limita a este tipo específico de topología.
 
 ---
 
